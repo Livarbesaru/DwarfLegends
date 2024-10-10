@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DwarfLegends</title>
+</head>
+<body>
+    <nav th:fragment="navbar-block">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/navbar.css}">
+        <ul>
+            <li><img class="logo" th:src="@{/images/logo.png}" /></li>
+            <li><a class="nav-text" href="/">DwarfLegends</a></li>
+            <li><a class="nav-text" href="/work">Lavori svolti</a></li>
+            <li><a class="nav-text" href="/job">Mansioni</a></li>
+            <li><a class="nav-text" href="/about">Chi siamo</a></li>
+        </ul>
+    </nav>
+</body>
+</html>

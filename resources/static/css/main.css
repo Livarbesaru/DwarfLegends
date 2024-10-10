@@ -1,0 +1,120 @@
+:root {
+    --text-padding-left: 20%;
+    --text-padding-right: 10%;
+    --text-padding-y: 15%;
+    --text-header: 2% 0%;
+    --arrows-height: 35%;
+    --arrows-z-index:9999;
+}
+
+@keyframes sliden-in-element{
+    0% {
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.3;
+    }
+    40% {
+        opacity: 0.6;
+    }
+    100% {
+        opacity: 1;
+        display: block;
+    }
+}
+/*LAYOUT*/
+
+
+body main {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+.visible-element{
+    animation-name: sliden-in-element;
+    animation-duration: 1s;
+    display: flex;
+    flex-direction: column;
+    align-content: space-around;
+    padding-left: var(--text-padding-left);
+    padding-top: var(--text-padding-y);
+    padding-bottom: var(--text-padding-y);
+    padding-right: calc(var(--text-padding-y) - var(--text-padding-right));
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-color: rgba(122, 104, 104, 0.67);
+    background-blend-mode: lighten;
+}
+.visible-element div {
+    color: white;
+}
+
+.visible-element div h3{
+    font-size: xx-large;
+}
+
+.visible-element h3{
+    margin: var(--text-header);
+}
+
+.visible-element p{
+    padding-right: var(--text-padding-left);
+    height: 10em;
+}
+
+.hidden-element {
+    display: none;
+}
+
+.arrow-right {
+    position: absolute;
+    top: var(--arrows-height);
+    left: 90%;
+    background-color: white;
+    padding: 1%;
+    border-radius: 50%;
+    z-index: var(--arrows-z-index);
+}
+
+.arrow-left {
+    position: absolute;
+    top: var(--arrows-height);
+    left: 5%;
+    background-color: white;
+    padding: 1%;
+    border-radius: 50%;
+    z-index: var(--arrows-z-index);
+}
+
+@media only screen and (max-width: 780px) {
+    .carousel-element {
+        height: 100vh;
+        font-size: xx-large;
+    }
+
+    .visible-element{
+        padding: 30% 10% 30% 20%;
+    }
+
+    .visible-element div {
+        position: absolute;
+        top: 20%;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .carousel-element {
+        height: 100vh;
+        font-size: medium;
+    }
+
+    .visible-element{
+        padding: 30% 10% 30% 20%;
+    }
+    .visible-element div {
+        position: absolute;
+        top: 20%;
+    }
+}

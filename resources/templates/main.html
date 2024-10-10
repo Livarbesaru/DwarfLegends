@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DwarfLegends</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/base.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+</head>
+<body>
+<main>
+    <div th:replace="~{fragments/navbar :: navbar-block}"></div>
+    <div>
+        <form id="files-form" method="POST" th:action="@{/files/upload}" enctype="multipart/form-data">
+            <input id="legends" type="file" name="legends" />
+            <input id="legends-plus" type="file" name="legends_plus" />
+            <button type="submit">
+                Upload
+            </button>
+        </form>
+    </div>
+    <script th:src="@{/js/base.js}"></script>
+</main>
+</body>
+</html>

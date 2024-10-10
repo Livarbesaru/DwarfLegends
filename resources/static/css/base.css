@@ -1,0 +1,17 @@
+html {
+    font-size: x-large;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.italic {
+    font-style: italic;
+}
+
+@media only screen and (max-width: 780px) {
+    html {
+        font-size: medium;
+    }
+}

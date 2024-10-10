@@ -1,0 +1,30 @@
+:root {
+    --background-color-foot: rgba(12, 87, 21, 1);
+}
+
+footer {
+    font-size: medium;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding: 2.5%;
+    background-color: var(--background-color-foot);
+    color: white;
+}
+footer div {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1em;
+}
+footer h2 {
+    font-size: 1.5em;
+}
+footer ul {
+    list-style: none;
+}
+
+@media only screen and (max-width: 780px) {
+    footer {
+        font-size: small;
+    }
+}
