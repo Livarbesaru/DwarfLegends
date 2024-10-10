@@ -87,6 +87,7 @@ public class DataService implements IDataService {
             }
 
             if (cacheConfig != null) {
+                //analyze the element in case a configuration for its relative cache exists
                 analyzeCacheElements(
                         cacheConfig,
                         value,
@@ -94,16 +95,18 @@ public class DataService implements IDataService {
                         allCache);
             }
 
-            //in case there is are nesting to cache, it adds the main obj to the list
+            //in case there are nesting to cache, it adds the main obj to the list
             if (cacheNestingMap != null) {
                 addToList(value, nestingToCycle, new TypeReference<>() {
                 });
             }
 
-            //proceed to cycle the nesting doing recursions on the method
+            //proceed to cycle the nesting doing recursions on this same method
             if (!ObjectUtils.isEmpty(nestingToCycle)) {
                 nestingToCycle.forEach(val -> {
                     Map<String, Object> dataNestingPass = new HashMap<>();
+                    //checks whether the cache config or the cache rule has orders to pass data to nested objects
+                    //this is done to pass data required to analyze relation with the nested objects in case those object doesn't have it
                     if(cacheConfig != null && cacheConfig.getDataToPassMap() != null){
                         dataNestingPass = getDataToPass(dataNestingPass,val,dataToPass,cacheConfig);
                     } else if (cacheRule != null && cacheRule.getDataToPassMap() != null) {
@@ -138,10 +141,14 @@ public class DataService implements IDataService {
                             .ifPresent(links -> links.forEach((keyLink, link) -> {
                                 Object linkData = dataForKey.get(keyLink);
                                 cachingData.getData().remove(keyLink);
-                                if (linkData instanceof Map || linkData instanceof List) {
+                                //checks whether the data to link is of a nested type or a direct one on the main object
+                                if(linkData != null && !(linkData instanceof Map || linkData instanceof List)){
+                                    //in case it's a param on the main object, the param gets added to a map with the relative link key
+                                    linkData = Map.of(keyLink,linkData);
+                                }
+
+                                if(linkData != null){
                                     analyzeLink(keyLink, link, linkData, dataLinksMap, cacheConfig.getDataToPassMap() != null ? cacheConfig.getInheritedData(dataForKey) : new HashMap<>());
-                                }else if(linkData != null){
-                                    analyzeLink(keyLink, link, Map.of(keyLink,linkData), dataLinksMap, cacheConfig.getDataToPassMap() != null ? cacheConfig.getInheritedData(dataForKey) : new HashMap<>());
                                 }
                             }));
                 });
@@ -160,33 +167,50 @@ public class DataService implements IDataService {
 
         String cache = link.getCache();
         Map<Integer, String> keyLinkDefinition = link.getKeyElements();
+        //the data to pass has already been added to the map of data for the key generation
         AtomicReference<Map<String, Object>> dataForKeyAndLinks = new AtomicReference<>(new HashMap<>(dataToPass));
+
+        // in case the link has the configuration defined it means that the data should be linked
         if (cache != null && keyLinkDefinition != null) {
             elementsOnLink.forEach(element -> {
+                //duplicates the data for the key for each element to not alter the base data being passed previously
                 Map<String,Object> dataForKey = new HashMap<>(dataForKeyAndLinks.get());
                 dataForKey.putAll(element);
                 String keyElement = generateKeyPerConf(dataForKey, keyLinkDefinition);
+
+                //once the key has been generated, the link gets added to its relative list in the map of links
                 addLinkToMap(relationKey, new DataLink(keyElement, cache), dataLinkMap);
             });
         }
         if (link.getNestedLink() != null) {
+            //in case there are nested links defined there is a check of said nesting for each element linked before
             elementsOnLink.forEach(element -> link.getNestedLink().forEach((keyLink, nestedLink) -> {
+                //the data for the key gets duplicated for each nested link to not alter the original one
                 Map<String,Object> dataForKeyToPass = new HashMap<>(dataForKeyAndLinks.get());
                 dataForKeyToPass.putAll(element);
+
+                //in case the main link has defined data to pass said data gets passed
                 dataForKeyToPass = link.getDataToPassMap() != null ? link.getInheritedData(dataForKeyToPass) : new HashMap<>();
                 final Map<String, Object> finalDataForKeyToPass = dataForKeyToPass;
                 Object linkObject = element.get(keyLink);
                 List<Map<String, Object>> nestedLinkList = new ArrayList<>();
+
+                if(linkObject != null && !(linkObject instanceof Map || linkObject instanceof List)){
+                    //in case it's a param on the main object(element), the param gets added to a map with the relative link key
+                    linkObject = Map.of(keyLink,linkObject);
+                }
+
                 if (linkObject != null) {
                     addToList(linkObject, nestedLinkList, new TypeReference<>() {
                     });
                 }
+                //cycles each element defined in the nested link
                 nestedLinkList.forEach(el -> analyzeLink(
                                 keyLink,
                                 nestedLink,
                                 el,
                                 dataLinkMap,
-                                link.getDataToPassMap() != null ? link.getInheritedData(finalDataForKeyToPass) : new HashMap<>()));
+                                link.getDataToPassMap() != null ? finalDataForKeyToPass : new HashMap<>()));
             }));
         }
     }
