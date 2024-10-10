@@ -1,6 +1,8 @@
 package com.dwarflegends.webapp.infrastructure.web;
 
+import com.dwarflegends.webapp.domain.component.impl.CacheComponent;
 import com.dwarflegends.webapp.domain.service.IPageService;
+import com.dwarflegends.webapp.domain.service.impl.DataService;
 import com.dwarflegends.webapp.util.Util;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +25,7 @@ import org.thymeleaf.templateresolver.FileTemplateResolver;
 import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @WebMvcTest({MainController.class})
-@Import({MainController.class})
+@Import({MainController.class, DataService.class, CacheComponent.class})
 @TestPropertySource(
         properties = {
                 "spring.config.location=./test/config.properties"

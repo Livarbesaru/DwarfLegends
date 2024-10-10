@@ -28,12 +28,13 @@ public class PageServiceTest {
     private ICacheComponent iCacheComponent;
     @Test
     void getPath() throws AURException {
+        final String page = "main";
         when(iCacheComponent.getAvailableTag())
                 .thenReturn(Map.of(
-                        Util.getTag("main"),
-                        new TagDetails(Util.getTag("main"),"")
+                        Util.getTag(page),
+                        new TagDetails(Util.getTag(page),page)
                 ));
-        assertNotNull(pageService.getPath("main"));
+        assertNotNull(pageService.getPath( Util.getTag(page)));
     }
 
     @Test
